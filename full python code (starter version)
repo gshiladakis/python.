@@ -1,0 +1,136 @@
+import re
+import requests 
+import whois
+from datetime import datetime
+from urllib.parse import urlparse
+
+#---------------------------------
+# 1. Extract URLs from email 
+#---------------------------------
+def extract_urls(email_text):
+  url_pattern = r'https?://[^\s]+'
+  return re.finball(url_pattern, email_text 
+
+#-------------------------------
+# 2. Check Domain Age
+#-------------------------------
+def check_domain_age(url):
+    try:
+        domain = urlparse(url).netloc
+        domain_ifo - whois.whois(domain)
+
+        creation_date = domain_info.creation_date 
+
+        if isinstance(creation_date, list):
+            creation_date = creation_date[0]
+
+        if creation_date:
+            age_days = (datetime.now() - creation_date).days
+            return age_days
+        else: 
+            return None
+
+  #--------------------------------
+  # 3. Suspicious Keyword Detection
+  #--------------------------------
+  def detect_suspicious_keywords(email_text):
+    suspicious_keywords = [
+      "urgent", "verify", "login", "password",
+      "bank", "account suspended", "click here",
+      "limited time", "conform", "ssn"
+    ]
+
+    found_keywords = []
+
+    for word in suspicious_Keywords:
+        if word.lower() in email_text.lower():
+            found_keywords.append(word)
+
+    return found_keywords
+
+#-------------------------
+# 4. VirusTotal Scan
+#-------------------------
+def scan_with_virustotal(url, api_key):
+    headers = {
+        "x-apikey": api_key
+    }
+
+    vt_Url = "https://wwww.virustotal.com/v3/urls"
+
+    # Encode URL for VT 
+    response = requests.post(vt_url, headers=headers, data={"url": url})
+
+    if response.status_code == 200:
+        result = response.json()
+        return result
+    else:
+        return None 
+
+#-----------------------
+# 5. Risk Scoring System
+#-----------------------
+def calculate_score(domain_age, suspicious_words_count):
+    score = 0
+
+    # New domains are risky 
+    if domain_age is not None and domain_age < 100:
+        score += 2
+
+    # Suspicious keywords
+    score += suspicious_words_count
+
+    return score 
+
+  def classify_email(score):
+      if score >= 5:
+          return "Malicipus"
+      elif score >= 3:
+           return "Suspicious"
+      else: 
+          return "Safe" 
+
+  #----------------------
+  # Main Function
+  #----------------------
+  def analyze_email_(email_text, vt_api_key):
+      print(" Analyzing Email....\n")
+
+      urls = extract_urls(email_text)
+      keywords = detect_suspicious_keywords(email_text) 
+
+      print("Extracted URLs:", urls)
+      print("Suspicious Keywords Found: ", keywords)
+
+      total_score = 0 
+
+      for url i nurls: 
+        age = check_domain_age(url)
+        print(f"\nDomain age for {urrl}: {Age} days")
+
+        vt_result = scan_with_virustotals(url, vt_api_key)
+        print("VirusTotal scan requested.")
+
+        total_score += calculate_score(age, len(keywords))
+
+      verdict = classify_email(total_score)
+
+      print("\nFinal Score:"< total_score)
+      print("Verdict:", verdict)
+
+#----------------------
+# Example Usage
+#----------------------
+if __name__ == "__main__":
+    email_sample = ""
+    Dear user,
+
+    Your account has been suspended.
+    Please verify your password immediately:
+    https://fakebank-login-secure.com
+
+    This is urgent.
+    """
+
+    VT_API_KEY = "YOUR_VIRUSTOTAL_API_KEY"
+    analyze_email(email_sample, VT_API_KEY) 
