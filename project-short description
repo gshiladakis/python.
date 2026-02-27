@@ -1,0 +1,4 @@
+# Azure Security Monitoring Lab
+
+A hands-on lab demonstrating how to configure Microsoft Sentinel 
+to detect suspicious login activity using custom analytics rules.
