@@ -1,0 +1,50 @@
+from flask import Flask, request, jsonify, render_template, redirect, url_for
+import random
+import string
+
+app = Flask(__name__)
+
+# In-memory task storage
+tasks = []
+
+# -----------------------
+# Task Manager Routes
+# -----------------------
+@app.route('/')
+def home():
+    return render_template('index.html', tasks=tasks)
+
+@app.route('/add', methods=['POST'])
+def add_task():
+    task = request.form.get('task')
+    if task:
+        tasks.append({'task': task, 'completed': False})
+    return redirect(url_for('home'))
+
+@app.route('/complete/<int:index>')
+def complete_task(index):
+    if 0 <= index < len(tasks):
+        tasks[index]['completed'] = True
+    return redirect(url_for('home'))
+
+@app.route('/delete/<int:index>')
+def delete_task(index):
+    if 0 <= index < len(tasks):
+        tasks.pop(index)
+    return redirect(url_for('home'))
+
+# -----------------------
+# Password Generator API
+# -----------------------
+@app.route('/api/generate-password', methods=['GET'])
+def generate_password():
+    length = int(request.args.get('length', 12))
+    chars = string.ascii_letters + string.digits + string.punctuation
+    password = ''.join(random.choice(chars) for _ in range(length))
+    return jsonify({"password": password})
+
+# -----------------------
+# Run the App
+# -----------------------
+if __name__ == '__main__':
+    app.run(debug=True)
