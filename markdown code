@@ -1,0 +1,5 @@
+## Overview
+
+This project demonstrates how to configure Microsoft Sentinel to detect
+brute-force login attempts in an Azure environment. The lab simulates
+failed login attempts and creates a custom alert rule using KQL.
